@@ -8,7 +8,9 @@ vim.defer_fn(function()
 
     -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
     auto_install = false,
-
+    endwise = {
+      enable = true,
+    },
     highlight = { enable = true },
     indent = { enable = true },
     incremental_selection = {
@@ -32,6 +34,11 @@ vim.defer_fn(function()
           ['if'] = '@function.inner',
           ['ac'] = '@class.outer',
           ['ic'] = '@class.inner',
+          -- Add more textobjects for Ruby
+          ['am'] = '@method.outer',
+          ['im'] = '@method.inner',
+          ['ab'] = '@block.outer',
+          ['ib'] = '@block.inner',
         },
       },
       move = {

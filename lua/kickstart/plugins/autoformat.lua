@@ -26,69 +26,70 @@ return {
         terraform = formatters.lsp,
         typescript = formatters.prettierd,
         typescriptreact = formatters.prettierd,
-        eruby = formatters.prettierd,
+        -- eruby = formatters.htmlbeautifer,
+        -- erb = formatters.prettierd,
         yaml = formatters.lsp,
 
         -- Add your own shell formatters:
         myfiletype = formatters.shell({ cmd = { "myformatter", "%" } }),
 
         -- Add lazy formatter that will only run when formatting:
-        my_custom_formatter = function()
-          if vim.api.nvim_buf_get_name(0):match("/README.md$") then
-            return formatters.prettierd
-          else
-            return formatters.lsp()
-          end
-        end,
+        -- my_custom_formatter = function()
+        --   if vim.api.nvim_buf_get_name(0):match("/README.md$") then
+        --     return formatters.prettierd
+        --   else
+        --     return formatters.lsp()
+        --   end
+        -- end,
 
         -- Add custom formatter
-        filetype1 = formatters.remove_trailing_whitespace,
-        filetype2 = formatters.custom({ format = function(lines)
-          return vim.tbl_map(function(line)
-            return line:gsub("true", "false")
-          end, lines)
-        end}),
+        -- filetype1 = formatters.remove_trailing_whitespace,
+        -- filetype2 = formatters.custom({
+        --   format = function(lines)
+        --     return vim.tbl_map(function(line)
+        --       return line:gsub("true", "false")
+        --     end, lines)
+        --   end
+        -- }),
 
         -- Concatenate formatters
-        python = {
+        eruby = {
           formatters.remove_trailing_whitespace,
-          formatters.shell({ cmd = "tidy-imports" }),
-          formatters.black,
-          formatters.ruff,
+          formatters.shell({ cmd = { "htmlbeautifier" } }),
         },
 
         -- Use a tempfile instead of stdin
-        go = {
-          formatters.shell({
-            cmd = { "goimports-reviser", "-rm-unused", "-set-alias", "-format", "%" },
-            tempfile = function()
-              return vim.fn.expand("%") .. '.formatter-temp'
-            end
-          }),
-          formatters.shell({ cmd = { "gofmt" } }),
-        },
+        -- go = {
+        --   formatters.shell({
+        --     cmd = { "goimports-reviser", "-rm-unused", "-set-alias", "-format", "%" },
+        --     tempfile = function()
+        --       return vim.fn.expand("%") .. '.formatter-temp'
+        --     end
+        --   }),
+        --   formatters.shell({ cmd = { "gofmt" } }),
+        -- },
 
         -- Add conditional formatter that only runs if a certain file exists
         -- in one of the parent directories.
-        javascript = {
-          formatters.if_file_exists({
-            pattern = ".eslintrc.*",
-            formatter = formatters.eslint_d_fix,
-          }),
-          formatters.if_file_exists({
-            pattern = { ".prettierrc", ".prettierrc.*", "prettier.config.*" },
-            formatter = formatters.prettierd,
-          }),
-          -- By default it stops at the git repo root (or "/" if git repo not found)
-          -- but it can be customized with the `stop_path` option:
-          formatters.if_file_exists({
-            pattern = ".prettierrc",
-            formatter = formatters.prettierd,
-            stop_path = function()
-              return "/my/custom/stop/path"
-            end
-          }),
-        },
+        -- javascript = {
+        --   formatters.if_file_exists({
+        --     pattern = ".eslintrc.*",
+        --     formatter = formatters.eslint_d_fix,
+        --   }),
+        --   formatters.if_file_exists({
+        --     pattern = { ".prettierrc", ".prettierrc.*", "prettier.config.*" },
+        --     formatter = formatters.prettierd,
+        --   }),
+        --   -- By default it stops at the git repo root (or "/" if git repo not found)
+        --   -- but it can be customized with the `stop_path` option:
+        --   formatters.if_file_exists({
+        --     pattern = ".prettierrc",
+        --     formatter = formatters.prettierd,
+        --     stop_path = function()
+        --       return "/my/custom/stop/path"
+        --     end
+        --   }),
+        -- },
       },
 
       -- Optional: fallback formatter to use when no formatters match the current filetype
