@@ -37,33 +37,31 @@ return {
     end,
   },
 
-  -- {
-  --   "williamboman/mason.nvim",
-  --   build = ":MasonUpdate",
-  --   cmd = { "Mason", "MasonInstall" },
-  --   opts = {},
-  -- },
-  -- {
-  --   "neovim/nvim-lspconfig",
-  --   config = function()
-  --     require "plugins.configs.lspconfig"
-  --   end,
-  -- },
-
   {
     "stevearc/conform.nvim",
     opts = require "plugins.configs.conform",
   },
 
-  -- {
-  --   "nvimdev/indentmini.nvim",
-  --   event = { "BufReadPre", "BufNewFile" },
-  --   opts = {},
-  -- },
-
   {
     "ibhagwan/fzf-lua",
     dependencies = { "nvim-tree/nvim-web-devicons" },
     opts = require "plugins.configs.fzf",
+  },
+
+  {
+    "mason-org/mason.nvim",
+    opts = {},
+  },
+
+  {
+    "mason-org/mason-lspconfig.nvim",
+    opts = require "plugins.configs.mason-lsp",
+  },
+
+  {
+    "neovim/nvim-lspconfig",
+    config = function()
+      return require "plugins.configs.lsp"
+    end,
   },
 }
