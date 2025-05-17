@@ -25,7 +25,41 @@ return {
     end,
   },
 
-  { "lewis6991/gitsigns.nvim", opts = {} },
+  {
+    "lewis6991/gitsigns.nvim",
+    event = { "BufReadPre", "BufNewFile" },
+    opts = {
+      signs = {
+        add = { text = "▍" },
+        change = { text = "▍" },
+        delete = { text = "" },
+        topdelete = { text = "" },
+        changedelete = { text = "▍" },
+        untracked = { text = "▍" },
+      },
+    },
+  },
+
+  {
+    "folke/trouble.nvim",
+    dependencies = {
+      "nvim-tree/nvim-web-devicons",
+    },
+    cmd = {
+      "TroubleToggle",
+      "Trouble",
+    },
+    opts = {
+      use_diagnostic_signs = true,
+    },
+    keys = {
+      {
+        "<leader>xx",
+        "<cmd>Trouble diagnostics toggle<cr>",
+        desc = "Document Diagnostics (Trouble)",
+      },
+    },
+  },
 
   {
     "nvim-treesitter/nvim-treesitter",
@@ -85,6 +119,7 @@ return {
 
       lint.linters_by_ft = {
         ruby = { "ruby" },
+        fish = { "fish" },
         -- javascript = { "biomejs" },
         -- typescript = { "biomejs" },
         -- javascriptreact = { "biomejs" },
