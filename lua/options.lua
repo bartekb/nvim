@@ -6,6 +6,19 @@ vim.g.maplocalleader = "\\"
 o.laststatus = 3 -- global statusline
 o.showmode = false
 o.clipboard = "unnamedplus"
+
+vim.g.clipboard = {
+  name = "OSC 52",
+  copy = {
+    ["+"] = require("vim.ui.clipboard.osc52").copy "+",
+    ["*"] = require("vim.ui.clipboard.osc52").copy "*",
+  },
+  paste = {
+    ["+"] = require("vim.ui.clipboard.osc52").paste "+",
+    ["*"] = require("vim.ui.clipboard.osc52").paste "*",
+  },
+}
+
 -- Indenting
 o.expandtab = true
 o.shiftwidth = 2
@@ -14,7 +27,7 @@ o.tabstop = 2
 o.softtabstop = 2
 
 vim.opt.fillchars = { eob = " " }
-vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣', extends = '…', precedes = '…', eol = '↲' }
+vim.opt.listchars = { tab = "» ", trail = "·", nbsp = "␣", extends = "…", precedes = "…", eol = "↲" }
 o.ignorecase = true
 o.smartcase = true
 o.mouse = "a"
