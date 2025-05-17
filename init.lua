@@ -1,4 +1,5 @@
 require "options"
+require "autocommands"
 require "commands"
 require "lazy_vim"
 
@@ -7,6 +8,4 @@ require("lazy").setup(plugins, require "lazy_config")
 
 require "mappings"
 
--- vim.cmd "colorscheme catppuccin"
--- vim.cmd "colorscheme gruvbox"
-vim.cmd "colorscheme catppuccin"
+vim.cmd.colorscheme "catppuccin"

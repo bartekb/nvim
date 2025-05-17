@@ -6,7 +6,7 @@ return {
   { "nvim-tree/nvim-web-devicons", opts = {} },
 
   {
-  "nvim-tree/nvim-tree.lua",
+    "nvim-tree/nvim-tree.lua",
     version = "*",
     lazy = false,
     dependencies = {
@@ -74,6 +74,25 @@ return {
     "neovim/nvim-lspconfig",
     config = function()
       return require "plugins.configs.lsp"
+    end,
+  },
+
+  {
+    "mfussenegger/nvim-lint",
+    event = { "BufReadPre", "BufNewFile" },
+    config = function()
+      local lint = require "lint"
+
+      lint.linters_by_ft = {
+        ruby = { "ruby" },
+        -- javascript = { "biomejs" },
+        -- typescript = { "biomejs" },
+        -- javascriptreact = { "biomejs" },
+        -- typescriptreact = { "biomejs" },
+        go = { "golangcilint" },
+        -- svelte = { "eslint_d" },
+        -- python = { "pylint" },
+      }
     end,
   },
 }
