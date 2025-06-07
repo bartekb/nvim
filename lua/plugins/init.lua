@@ -95,16 +95,6 @@ return {
   },
 
   {
-    "mason-org/mason.nvim",
-    opts = {},
-  },
-
-  {
-    "mason-org/mason-lspconfig.nvim",
-    opts = require "plugins.configs.mason-lsp",
-  },
-
-  {
     "neovim/nvim-lspconfig",
     config = function()
       return require "plugins.configs.lsp"
