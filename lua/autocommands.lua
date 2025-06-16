@@ -28,3 +28,24 @@ vim.api.nvim_create_autocmd({ "BufWritePost" }, {
   end,
   group = augroup "linter",
 })
+
+-- Automatically open quickfix window when there are errors
+vim.api.nvim_create_autocmd("QuickFixCmdPost", {
+  group = vim.api.nvim_create_augroup("QuickFixAutoOpen", { clear = true }),
+  pattern = "[^l]*",
+  command = "cwindow",
+})
+
+-- Automatically open location list when there are errors
+vim.api.nvim_create_autocmd("QuickFixCmdPost", {
+  group = vim.api.nvim_create_augroup("LocationListAutoOpen", { clear = true }),
+  pattern = "l*",
+  command = "lwindow",
+})
+
+-- Set quickfix window height
+vim.api.nvim_create_autocmd("FileType", {
+  group = vim.api.nvim_create_augroup("QuickFixHeight", { clear = true }),
+  pattern = "qf",
+  command = "setlocal winheight=10",
+})

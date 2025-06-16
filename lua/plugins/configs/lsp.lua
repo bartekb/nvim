@@ -1,5 +1,6 @@
 local lspconfig = require "lspconfig"
 
+-- Lua LSP
 lspconfig.lua_ls.setup {
   settings = {
     Lua = {
@@ -17,8 +18,20 @@ lspconfig.lua_ls.setup {
   },
 }
 
--- lspconfig.gopls.setup {}
--- lspconfig.pyright.setup({})
+-- TypeScript
 lspconfig.ts_ls.setup {}
-lspconfig.ruby_lsp.setup {}
--- lspconfig.rust_analyzer.setup({})
+
+-- Ruby LSP (no rubocop or formatting)
+lspconfig.ruby_lsp.setup {
+  init_options = {
+    enabledFeatures = {
+      documentFormatting = false,
+      diagnostics = false,
+    },
+  },
+}
+
+-- Uncomment if needed:
+-- lspconfig.gopls.setup {}
+-- lspconfig.pyright.setup {}
+-- lspconfig.rust_analyzer.setup {}
