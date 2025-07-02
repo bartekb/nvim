@@ -1,51 +1,88 @@
-local function augroup(name)
-  return vim.api.nvim_create_augroup("custom_" .. name, { clear = true })
-end
+local augroup = vim.api.nvim_create_augroup
+local autocmd = vim.api.nvim_create_autocmd
 
--- Highlight on yank.
-vim.api.nvim_create_autocmd({ "TextYankPost" }, {
+-- General autocommands group
+local general = augroup('General', { clear = true })
+
+-- Highlight on yank
+autocmd('TextYankPost', {
+  group = general,
+  pattern = '*',
   callback = function()
-    vim.highlight.on_yank { timeout = 200 }
+    vim.highlight.on_yank({ higroup = 'IncSearch', timeout = 200 })
   end,
-  group = augroup "highlight_yank",
+  desc = 'Highlight yanked text',
 })
 
--- Close quickfix window when it is empty.
-vim.api.nvim_create_autocmd({ "QuickFixCmdPost" }, {
-  pattern = { "[^l]*" },
+-- Remove trailing whitespace on save
+autocmd('BufWritePre', {
+  group = general,
+  pattern = '*',
   callback = function()
-    if vim.fn.getqflist({ winid = 0 })[1] == nil then
-      vim.cmd.cclose()
+    local save_cursor = vim.fn.getpos('.')
+    vim.cmd([[%s/\s\+$//e]])
+    vim.fn.setpos('.', save_cursor)
+  end,
+  desc = 'Remove trailing whitespace on save',
+})
+
+-- File type specific settings
+local filetype = augroup('FileType', { clear = true })
+
+-- Close certain filetypes with <q>
+autocmd('FileType', {
+  group = filetype,
+  pattern = {
+    'qf', 'help', 'man', 'notify', 'lspinfo', 'spectre_panel',
+    'startuptime', 'tsplayground', 'PlenaryTestPopup'
+  },
+  callback = function(event)
+    vim.bo[event.buf].buflisted = false
+    vim.keymap.set('n', 'q', '<cmd>close<cr>', { buffer = event.buf, silent = true })
+  end,
+  desc = 'Close certain filetypes with q',
+})
+
+-- Set wrap and spell for text files
+autocmd('FileType', {
+  group = filetype,
+  pattern = { 'gitcommit', 'markdown', 'text' },
+  callback = function()
+    vim.opt_local.wrap = true
+    vim.opt_local.spell = true
+  end,
+  desc = 'Set wrap and spell for text files',
+})
+
+-- Remember last cursor position
+autocmd('BufReadPost', {
+  group = general,
+  callback = function()
+    local mark = vim.api.nvim_buf_get_mark(0, '"')
+    local lcount = vim.api.nvim_buf_line_count(0)
+    if mark[1] > 0 and mark[1] <= lcount then
+      pcall(vim.api.nvim_win_set_cursor, 0, mark)
     end
   end,
-  group = augroup "quickfix",
+  desc = 'Remember last cursor position',
 })
 
--- Setup linter.
-vim.api.nvim_create_autocmd({ "BufWritePost" }, {
-  callback = function()
-    require("lint").try_lint()
+-- Go to last location when opening a buffer
+autocmd('BufReadPost', {
+  group = general,
+  callback = function(event)
+    local exclude = { 'gitcommit' }
+    local buf = event.buf
+    if vim.tbl_contains(exclude, vim.bo[buf].filetype) or vim.b[buf].lazyvim_last_loc then
+      return
+    end
+    vim.b[buf].lazyvim_last_loc = true
+    local mark = vim.api.nvim_buf_get_mark(buf, '"')
+    local lcount = vim.api.nvim_buf_line_count(buf)
+    if mark[1] > 0 and mark[1] <= lcount then
+      pcall(vim.api.nvim_win_set_cursor, 0, mark)
+    end
   end,
-  group = augroup "linter",
+  desc = 'Go to last location when opening a buffer',
 })
 
--- Automatically open quickfix window when there are errors
-vim.api.nvim_create_autocmd("QuickFixCmdPost", {
-  group = vim.api.nvim_create_augroup("QuickFixAutoOpen", { clear = true }),
-  pattern = "[^l]*",
-  command = "cwindow",
-})
-
--- Automatically open location list when there are errors
-vim.api.nvim_create_autocmd("QuickFixCmdPost", {
-  group = vim.api.nvim_create_augroup("LocationListAutoOpen", { clear = true }),
-  pattern = "l*",
-  command = "lwindow",
-})
-
--- Set quickfix window height
-vim.api.nvim_create_autocmd("FileType", {
-  group = vim.api.nvim_create_augroup("QuickFixHeight", { clear = true }),
-  pattern = "qf",
-  command = "setlocal winheight=10",
-})

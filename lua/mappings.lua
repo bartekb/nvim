@@ -1,49 +1,25 @@
 local map = vim.keymap.set
 
 -- General
-map("n", "<C-s>", "<cmd>w<CR>", { desc = "Save file" })
-map("i", "jk", "<ESC>", { desc = "Escape insert mode" })
 map("n", "<leader>y", "<cmd>%y+<CR>", { desc = "Yank entire file" })
 
--- FZF
-map("n", "<leader><leader>", require("fzf-lua").files, { desc = "FZF: Files" })
-map("n", "<leader>fb", require("fzf-lua").buffers, { desc = "FZF: Buffers" })
-map("n", "<leader>fg", require("fzf-lua").live_grep, { desc = "FZF: Live Grep" })
-map("n", "<leader>fw", require("fzf-lua").grep_cword, { desc = "FZF: Word under cursor" })
-map("v", "<leader>fv", require("fzf-lua").grep_visual, { desc = "FZF: Visual selection" })
-map("n", "<leader>fk", require("fzf-lua").keymaps, { desc = "FZF: Search Keymaps" })
+-- File operations (VSCode-like)
+map("n", "<C-S-p>", function() require('mini.extra').pickers.commands() end, { desc = "Command palette" })
+map("n", "<leader><leader>", function() require('mini.pick').builtin.files() end, { desc = "Find files" })
+map("n", "<leader>fb", function() require('mini.pick').builtin.buffers() end, { desc = "Find buffers" })
+map("n", "<leader>fg", function() require('mini.pick').builtin.grep_live() end, { desc = "Live grep" })
+map("n", "<leader>fw", function() require('mini.pick').builtin.grep({ pattern = vim.fn.expand('<cword>') }) end, { desc = "Find word under cursor" })
+map("n", "<leader>fh", function() require('mini.pick').builtin.help() end, { desc = "Find help" })
+map("n", "<leader>fr", function() require('mini.extra').pickers.oldfiles() end, { desc = "Recent files" })
+map("n", "<leader>fc", function() require('mini.extra').pickers.git_commits() end, { desc = "Git commits" })
 
--- Git via FZF/Diffview/Gitsigns
-map("n", "<leader>gs", require("fzf-lua").git_status, { desc = "Git: Status" })
-map("n", "<leader>gb", require("fzf-lua").git_branches, { desc = "Git: Branches" })
-map("n", "<leader>gc", require("fzf-lua").git_commits, { desc = "Git: Commits" })
-map("n", "<leader>gd", "<cmd>DiffviewOpen<cr>", { desc = "Git: Diffview Open" })
-map("n", "<leader>gq", "<cmd>DiffviewClose<cr>", { desc = "Git: Diffview Close" })
-map("n", "<leader>gf", "<cmd>DiffviewToggleFiles<cr>", { desc = "Git: Toggle Diff Files" })
-map("n", "<leader>gr", "<cmd>DiffviewRefresh<cr>", { desc = "Git: Refresh Diff" })
-map("n", "<leader>gh", "<cmd>DiffviewFileHistory<cr>", { desc = "Git: File History" })
-map("n", "<leader>gl", "<cmd>Gitsigns blame_line<cr>", { desc = "Git: Blame Line" })
-map("n", "<leader>gL", "<cmd>Gitsigns toggle_current_line_blame<cr>", { desc = "Git: Toggle Line Blame" })
-map("n", "<leader>gR", "<cmd>Gitsigns reset_buffer<cr>", { desc = "Git: Reset Buffer" })
-map("n", "<leader>gS", "<cmd>Gitsigns stage_buffer<cr>", { desc = "Git: Stage Buffer" })
-map("n", "<leader>gU", "<cmd>Gitsigns reset_buffer_index<cr>", { desc = "Git: Reset Index" })
+-- File explorer (VSCode-like sidebar)
+map("n", "<leader>e", function() require('mini.files').open() end, { desc = "File explorer" })
+map("n", "<leader>E", function() require('mini.files').open(vim.api.nvim_buf_get_name(0)) end, { desc = "File explorer (current file)" })
 
--- Git hunks
-map("n", "]c", "<cmd>Gitsigns next_hunk<cr>", { desc = "Next Git Hunk" })
-map("n", "[c", "<cmd>Gitsigns prev_hunk<cr>", { desc = "Previous Git Hunk" })
-map("n", "<leader>hh", "<cmd>Gitsigns stage_hunk<cr>", { desc = "Git: Stage Hunk" })
-map("n", "<leader>hu", "<cmd>Gitsigns undo_stage_hunk<cr>", { desc = "Git: Undo Stage" })
-map("n", "<leader>hr", "<cmd>Gitsigns reset_hunk<cr>", { desc = "Git: Reset Hunk" })
-map("v", "<leader>hh", ":Gitsigns stage_hunk<cr>", { desc = "Git: Stage Hunk" })
-map("v", "<leader>hr", ":Gitsigns reset_hunk<cr>", { desc = "Git: Reset Hunk" })
-
--- Move lines
-map("n", "<A-j>", "<cmd>m .+1<CR>==", { desc = "Move line down" })
-map("n", "<A-k>", "<cmd>m .-2<CR>==", { desc = "Move line up" })
-map("i", "<A-j>", "<ESC><cmd>m .+1<CR>==gi", { desc = "Move line down (Insert)" })
-map("i", "<A-k>", "<ESC><cmd>m .-2<CR>==gi", { desc = "Move line up (Insert)" })
-map("v", "<A-j>", ":m '>+1<CR>gv=gv", { desc = "Move selection down" })
-map("v", "<A-k>", ":m '<-2<CR>gv=gv", { desc = "Move selection up" })
+-- Buffer management
+map("n", "<leader>bd", function() require('mini.bufremove').delete() end, { desc = "Delete buffer" })
+map("n", "<leader>bD", function() require('mini.bufremove').delete(0, true) end, { desc = "Delete buffer (force)" })
 
 -- Better indenting
 map("v", "<", "<gv", { desc = "Indent left" })
@@ -52,39 +28,44 @@ map("v", ">", ">gv", { desc = "Indent right" })
 -- Visual mode paste without overwriting clipboard
 map("v", "p", '"_dP', { desc = "Paste without overwriting clipboard" })
 
--- Clipboard
+-- Clipboard operations
 map("n", "<leader>p", '"+p', { desc = "Paste from clipboard" })
 map("v", "<leader>y", '"+y', { desc = "Yank to clipboard" })
 map("v", "<leader>d", '"+d', { desc = "Delete to clipboard" })
 map("i", "<C-v>", '<ESC>"+pa', { desc = "Paste clipboard in insert mode" })
 
--- Search
-map("n", "<leader>/", ":%s/", { desc = "Search and replace file" })
-map({ "n", "x" }, "<leader>*", "*N", { desc = "Search word under cursor" })
-map({ "i", "n" }, "<Esc>", "<cmd>noh<CR><Esc>", { desc = "Clear search highlight" })
-
--- File Explorer
-map("n", "<leader>e", "<cmd>NvimTreeToggle<CR>", { desc = "Toggle File Explorer" })
-
--- Quickfix
-map("n", "<leader>qo", "<cmd>copen<CR>", { desc = "Quickfix Open" })
-map("n", "<leader>qc", "<cmd>cclose<CR>", { desc = "Quickfix Close" })
-map("n", "<leader>qn", "<cmd>cnext<CR>", { desc = "Quickfix Next" })
-map("n", "<leader>qp", "<cmd>cprev<CR>", { desc = "Quickfix Prev" })
-map("n", "<leader>qf", "<cmd>cfirst<CR>", { desc = "Quickfix First" })
-map("n", "<leader>ql", "<cmd>clast<CR>", { desc = "Quickfix Last" })
+-- LSP mappings
+map("n", "gd", vim.lsp.buf.definition, { desc = "Go to definition" })
+map("n", "gD", vim.lsp.buf.declaration, { desc = "Go to declaration" })
+map("n", "gr", vim.lsp.buf.references, { desc = "Go to references" })
+map("n", "gi", vim.lsp.buf.implementation, { desc = "Go to implementation" })
+map("n", "gt", vim.lsp.buf.type_definition, { desc = "Go to type definition" })
+map("n", "K", vim.lsp.buf.hover, { desc = "Hover documentation" })
+map("n", "<C-k>", vim.lsp.buf.signature_help, { desc = "Signature help" })
+map("n", "<F2>", vim.lsp.buf.rename, { desc = "Rename symbol" })
+map("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "Code actions" })
 
 -- Diagnostics
-map("n", "<leader>dt", ':lua vim.cmd("DiagnosticsToggle")<CR>', { desc = "Toggle diagnostics", silent = true })
-map("n", "<leader>dv", ':lua vim.cmd("DiagnosticsToggleVirtualText")<CR>', { desc = "Toggle virtual text", silent = true })
-map("n", "<leader>df", function() vim.diagnostic.open_float { focusable = true } end, { desc = "Float diagnostic" })
+map("n", "<leader>dd", vim.diagnostic.open_float, { desc = "Show diagnostics" })
+-- map("n", "[d", vim.diagnostic.jump { count = -1 }, { desc = "Previous diagnostic" })
+-- map("n", "]d", vim.diagnostic.jump { count = 1 }, { desc = "Next diagnostic" })
+map("n", "<leader>dl", vim.diagnostic.setloclist, { desc = "Diagnostics to location list" })
 
--- LSP Mappings
-map("n", "<leader>lr", vim.lsp.buf.rename, { desc = "LSP: Rename" })
-map("n", "<leader>la", vim.lsp.buf.code_action, { desc = "LSP: Code Action" })
-map("n", "<leader>lh", vim.lsp.buf.hover, { desc = "LSP: Hover Docs" })
-map("n", "<leader>ld", vim.lsp.buf.definition, { desc = "LSP: Go to Definition" })
-map("n", "<leader>lt", vim.lsp.buf.type_definition, { desc = "LSP: Type Definition" })
-map("n", "<leader>li", vim.lsp.buf.implementation, { desc = "LSP: Implementation" })
-map("n", "<leader>ls", vim.lsp.buf.signature_help, { desc = "LSP: Signature Help" })
-map("n", "<leader>lf", function() vim.lsp.buf.format { async = true } end, { desc = "LSP: Format Buffer" })
+-- Git (using mini.diff)
+map("n", "<leader>gh", function() require('mini.diff').toggle_overlay() end, { desc = "Toggle git overlay" })
+map("n", "]h", function() require('mini.diff').goto_hunk('next') end, { desc = "Next git hunk" })
+map("n", "[h", function() require('mini.diff').goto_hunk('prev') end, { desc = "Previous git hunk" })
+
+-- Sessions
+map("n", "<leader>ss", function() require('mini.sessions').select() end, { desc = "Select session" })
+map("n", "<leader>sw", function() require('mini.sessions').write() end, { desc = "Write session" })
+
+-- Quickfix
+map("n", "<leader>qo", "<cmd>copen<CR>", { desc = "Open quickfix" })
+map("n", "<leader>qc", "<cmd>cclose<CR>", { desc = "Close quickfix" })
+map("n", "<leader>qn", "<cmd>cnext<CR>", { desc = "Next quickfix" })
+map("n", "<leader>qp", "<cmd>cprev<CR>", { desc = "Previous quickfix" })
+
+-- Utility
+map("n", "<leader>nh", "<cmd>noh<CR>", { desc = "Clear search highlights" })
+
