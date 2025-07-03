@@ -1,16 +1,5 @@
 local map = vim.keymap.set
 
-local function get_project_root()
-  local root = vim.fs.find(
-    { ".git", ".hg", ".svn", "Makefile", "package.json" },
-    { upward = true, stop = vim.loop.os_homedir(), type = "directory" }
-  )[1]
-  if root then
-    return vim.fs.dirname(root)
-  end
-  return vim.fn.getcwd()
-end
-
 -- General
 map("n", "<C-s>", "<cmd>w<CR>", { desc = "Save file" })
 map("i", "jk", "<ESC>", { desc = "Escape insert mode" })
@@ -73,14 +62,8 @@ map("n", "<leader>/", ":%s/", { desc = "Search and replace file" })
 map({ "i", "n" }, "<Esc>", "<cmd>noh<CR><Esc>", { desc = "Clear search highlight" })
 
 -- File Explorer
-map("n", "<leader>e", function()
-  local dir = get_project_root()
-  require("oil").toggle_float(dir)
-end, { desc = "Toggle File Explorer" })
+map("n", "<leader>e", require("oil").toggle_float, { desc = "Toggle File Explorer" })
 
-map("n", "<leader>E", function()
-  require("oil").toggle_float(vim.fn.getcwd())
-end, { desc = "Toggle File Explorer (cwd)" })
 -- Quickfix
 -- map("n", "<leader>qo", "<cmd>copen<CR>", { desc = "Quickfix Open" })
 -- map("n", "<leader>qc", "<cmd>cclose<CR>", { desc = "Quickfix Close" })
