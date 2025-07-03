@@ -1,7 +1,6 @@
 return {
   keymap = {
     fzf = {
-      -- use cltr-q to select all items and convert to quickfix list
       ["ctrl-q"] = "select-all+accept",
     },
   },
@@ -12,7 +11,6 @@ return {
     col = 0.5,
   },
   files = {
-    -- formatter = "path.filename_first",
     git_icons = true,
     prompt = "files:",
     git = true,

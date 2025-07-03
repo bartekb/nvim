@@ -34,9 +34,8 @@ require("nvim-treesitter.configs").setup {
     enable = true,
     additional_vim_regex_highlighting = false,
 
-    -- Disable highlighting for large files (>100 KB)
     disable = function(_, buf)
-      local max_filesize = 200 * 1024 -- 100 KB
+      local max_filesize = 200 * 1024
       local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
       return ok and stats and stats.size > max_filesize
     end,
@@ -44,6 +43,6 @@ require("nvim-treesitter.configs").setup {
 
   indent = {
     enable = true,
-    disable = { "yaml" }, -- YAML indentation can be quirky
+    disable = { "yaml" },
   },
 }

@@ -1,3 +1,3 @@
 return {
-  install = { colorscheme = { "catppuccin" } },
+  install = { colorscheme = { "retrobox" } },
 }

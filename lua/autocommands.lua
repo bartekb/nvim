@@ -10,17 +10,6 @@ vim.api.nvim_create_autocmd({ "TextYankPost" }, {
   group = augroup "highlight_yank",
 })
 
--- Close quickfix window when it is empty.
-vim.api.nvim_create_autocmd({ "QuickFixCmdPost" }, {
-  pattern = { "[^l]*" },
-  callback = function()
-    if vim.fn.getqflist({ winid = 0 })[1] == nil then
-      vim.cmd.cclose()
-    end
-  end,
-  group = augroup "quickfix",
-})
-
 -- Setup linter.
 vim.api.nvim_create_autocmd({ "BufWritePost" }, {
   callback = function()
@@ -29,23 +18,46 @@ vim.api.nvim_create_autocmd({ "BufWritePost" }, {
   group = augroup "linter",
 })
 
--- Automatically open quickfix window when there are errors
-vim.api.nvim_create_autocmd("QuickFixCmdPost", {
-  group = vim.api.nvim_create_augroup("QuickFixAutoOpen", { clear = true }),
-  pattern = "[^l]*",
-  command = "cwindow",
+-- Remove trailing whitespace on save
+vim.api.nvim_create_autocmd("BufWritePre", {
+  group = augroup "whitespace",
+  pattern = "*",
+  callback = function()
+    local save_cursor = vim.fn.getpos "."
+    vim.cmd [[%s/\s\+$//e]]
+    vim.fn.setpos(".", save_cursor)
+  end,
+  desc = "Remove trailing whitespace on save",
 })
 
--- Automatically open location list when there are errors
-vim.api.nvim_create_autocmd("QuickFixCmdPost", {
-  group = vim.api.nvim_create_augroup("LocationListAutoOpen", { clear = true }),
-  pattern = "l*",
-  command = "lwindow",
+-- Remember last cursor position
+vim.api.nvim_create_autocmd("BufReadPost", {
+  group = augroup "cursor_pos",
+  callback = function()
+    local mark = vim.api.nvim_buf_get_mark(0, '"')
+    local lcount = vim.api.nvim_buf_line_count(0)
+    if mark[1] > 0 and mark[1] <= lcount then
+      pcall(vim.api.nvim_win_set_cursor, 0, mark)
+    end
+  end,
+  desc = "Remember last cursor position",
 })
 
--- Set quickfix window height
-vim.api.nvim_create_autocmd("FileType", {
-  group = vim.api.nvim_create_augroup("QuickFixHeight", { clear = true }),
-  pattern = "qf",
-  command = "setlocal winheight=10",
+-- Go to last location when opening a buffer
+vim.api.nvim_create_autocmd("BufReadPost", {
+  group = augroup "last_pos",
+  callback = function(event)
+    local exclude = { "gitcommit" }
+    local buf = event.buf
+    if vim.tbl_contains(exclude, vim.bo[buf].filetype) or vim.b[buf].lazyvim_last_loc then
+      return
+    end
+    vim.b[buf].lazyvim_last_loc = true
+    local mark = vim.api.nvim_buf_get_mark(buf, '"')
+    local lcount = vim.api.nvim_buf_line_count(buf)
+    if mark[1] > 0 and mark[1] <= lcount then
+      pcall(vim.api.nvim_win_set_cursor, 0, mark)
+    end
+  end,
+  desc = "Go to last location when opening a buffer",
 })

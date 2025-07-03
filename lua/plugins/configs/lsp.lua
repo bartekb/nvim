@@ -1,6 +1,5 @@
 local lspconfig = require "lspconfig"
 
--- Lua LSP
 lspconfig.lua_ls.setup {
   settings = {
     Lua = {
@@ -18,10 +17,7 @@ lspconfig.lua_ls.setup {
   },
 }
 
--- TypeScript
 lspconfig.ts_ls.setup {}
-
--- Ruby LSP (no rubocop or formatting)
 lspconfig.ruby_lsp.setup {
   init_options = {
     enabledFeatures = {
@@ -31,7 +27,6 @@ lspconfig.ruby_lsp.setup {
   },
 }
 
--- Uncomment if needed:
 -- lspconfig.gopls.setup {}
 -- lspconfig.pyright.setup {}
 -- lspconfig.rust_analyzer.setup {}
