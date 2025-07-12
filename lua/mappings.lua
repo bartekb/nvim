@@ -16,6 +16,11 @@ map("n", "<leader>gs", require("fzf-lua").git_status, { desc = "Git: Status" })
 map("n", "<leader>gb", require("fzf-lua").git_branches, { desc = "Git: Branches" })
 map("n", "<leader>gc", require("fzf-lua").git_commits, { desc = "Git: Commits" })
 
+-- Mini Buff remove
+
+map('n', '<leader>bd', function() require('mini.bufremove').delete(0, false) end, { desc = 'Delete buffer' })
+map('n', '<leader>bD', function() require('mini.bufremove').delete(0, true) end, { desc = 'Force delete buffer' })
+
 -- map("n", "<leader>gd", "<cmd>DiffviewOpen<cr>", { desc = "Git: Diffview Open" })
 -- map("n", "<leader>gq", "<cmd>DiffviewClose<cr>", { desc = "Git: Diffview Close" })
 -- map("n", "<leader>gf", "<cmd>DiffviewToggleFiles<cr>", { desc = "Git: Toggle Diff Files" })
@@ -92,3 +97,9 @@ map("n", "<leader>ld", vim.lsp.buf.definition, { desc = "LSP: Go to Definition" 
 map("n", "<leader>lt", vim.lsp.buf.type_definition, { desc = "LSP: Type Definition" })
 map("n", "<leader>li", vim.lsp.buf.implementation, { desc = "LSP: Implementation" })
 map("n", "<leader>ls", vim.lsp.buf.signature_help, { desc = "LSP: Signature Help" })
+
+-- substitute
+map("n", "s", require('substitute').operator, { noremap = true, desc = "substitute operator" })
+map("n", "ss", require('substitute').line, { noremap = true, desc = "substitute line" })
+map("n", "S", require('substitute').eol, { noremap = true, desc = "substitute EOL" })
+map("x", "s", require('substitute').visual, { noremap = true, desc = "substitute visual" })

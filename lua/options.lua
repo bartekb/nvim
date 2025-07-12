@@ -26,7 +26,7 @@ opt.smartindent = true -- Insert indents automatically in C‑like blocks
 opt.ignorecase = true -- Case‑insensitive by default…
 opt.smartcase = true -- … but smart when capitals present
 opt.undofile = true -- Persistent undo across restarts
-opt.undolevels = 10000 -- Plenty of history
+opt.undolevels = 1000 -- Plenty of history
 opt.swapfile = false -- Use your VCS instead
 vim.api.nvim_set_hl(0, "IndentLine", { link = "Comment" })
 opt.shortmess:append { I = true, c = true }

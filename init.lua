@@ -8,4 +8,4 @@ require("lazy").setup(plugins, require "lazy_config")
 
 require "mappings"
 
-vim.cmd.colorscheme "retrobox"
+vim.cmd.colorscheme "ayu"

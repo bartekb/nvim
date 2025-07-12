@@ -1,5 +1,18 @@
 return {
   {
+    "Shatur/neovim-ayu",
+    lazy = false,
+    priority = 1000,
+    config = function()
+      require("ayu").setup({
+        overrides = {
+          Comment = { italic = false },
+        },
+        mirage = false,
+      })
+    end,
+  },
+  {
     "folke/trouble.nvim",
     dependencies = {
       "nvim-tree/nvim-web-devicons",

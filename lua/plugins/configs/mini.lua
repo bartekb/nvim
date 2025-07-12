@@ -2,6 +2,7 @@ require("mini.starter").setup()
 require("mini.hues").setup { background = "#11262d", foreground = "#c0c8cc" }
 require("mini.statusline").setup()
 require("mini.tabline").setup()
+
 require("mini.basics").setup {
   options = {
     basic = true,
@@ -43,11 +44,27 @@ require("mini.cursorword").setup()
 require("mini.ai").setup()
 require("mini.jump2d").setup()
 require("mini.notify").setup()
-require("mini.icons").setup()
+-- require("mini.icons").setup()
 require("mini.sessions").setup()
 require("mini.completion").setup()
 require("mini.bracketed").setup()
-require("mini.move").setup()
+
+require('mini.move').setup({
+  mappings = {
+    left  = '<M-Left>',
+    right = '<M-Right>',
+    down  = '<M-Down>',
+    up    = '<M-Up>',
+    line_left  = '<M-Left>',
+    line_right = '<M-Right>',
+    line_down  = '<M-Down>',
+    line_up    = '<M-Up>',
+  },
+  options = {
+    reindent_linewise = true,
+  },
+})
+
 require("mini.trailspace").setup()
 -- require("mini.fuzzy").setup()
 require("mini.align").setup()

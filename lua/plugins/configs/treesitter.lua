@@ -17,6 +17,7 @@ require("nvim-treesitter.configs").setup {
     "markdown",
     "markdown_inline",
     "ruby",
+    "go",
     "rust",
     "scss",
     "sql",
@@ -26,6 +27,8 @@ require("nvim-treesitter.configs").setup {
     "vimdoc",
     "yaml",
     "toml",
+    "prisma",       -- (optional for Nest.js + Prisma)
+    "proto",        -- (optional for Nest.js + gRPC)
   },
 
   auto_install = true,
